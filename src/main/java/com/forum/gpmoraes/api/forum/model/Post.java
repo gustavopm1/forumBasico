@@ -30,7 +30,7 @@ public class Post implements Serializable {
     private Date date;
     private String description;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
 
     @ManyToOne
