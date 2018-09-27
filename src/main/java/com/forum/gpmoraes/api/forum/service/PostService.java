@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -22,8 +21,7 @@ public class PostService {
     private PostRepository postRepository;
 
     public Post find (Integer id){
-        Optional<Post> post = postRepository.findById(id);
-        return post.orElseThrow(() -> new ObjectNotFoundException("Post not found! Id: " + id + "."));
+        return postRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Post not found! Id: " + id + "."));
     }
 
     public Post insert (Post post){
@@ -56,7 +54,12 @@ public class PostService {
     }
 
     public Post fromDTO(PostDTO postDTO){
-        return new Post(postDTO.getId(), postDTO.getDate(), postDTO.getDescription(),postDTO.getUser());
+        return Post.builder()
+                .postId(postDTO.getId())
+                .date(postDTO.getDate())
+                .description(postDTO.getDescription())
+                .user(postDTO.getUser())
+                .build();
     }
 
     private void updateData(Post newPost, Post post) {

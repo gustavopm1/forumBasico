@@ -38,7 +38,7 @@ public class Post implements Serializable {
     private User user;
 
 
-    public Post(Integer postId, Date date, String description, User user) {
+    public  Post(Integer postId, Date date, String description, User user) {
         this.postId = postId;
         this.date = date;
         this.description = description;

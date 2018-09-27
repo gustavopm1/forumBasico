@@ -11,19 +11,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
     @Autowired
-    PostService postService;
+    private PostService postService;
 
     @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
-    public ResponseEntity<Post> find(@PathVariable Integer postId){
-        Post post =  postService.find(postId);
+    public ResponseEntity<Post> find(@PathVariable Integer postId) {
+        Post post = postService.find(postId);
         return ResponseEntity.ok().body(post);
     }
 
@@ -36,33 +34,34 @@ public class PostController {
         return ResponseEntity.created(uri).build();
     }
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.PUT )
-    public ResponseEntity<Void> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id){
+    @RequestMapping(value = "/{postId}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
         Post post = postService.fromDTO(postDTO);
         post.setPostId(id);
         post = postService.update(post);
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(value = "/{postId}",method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable Integer postId){
+    @RequestMapping(value = "/{postId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable Integer postId) {
         postService.delete(postId);
         return ResponseEntity.noContent().build();
     }
 
+    /*
+        @RequestMapping(method = RequestMethod.GET)
+        public ResponseEntity<List<PostDTO>> findAll(){
+            List<Post> list = postService.findAll();
+            List<PostDTO> listDto = list.stream().map(obj -> new PostDTO(obj)).collect(Collectors.toList());
+            return ResponseEntity.ok().body(listDto);
+        }
+    */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<PostDTO>> findAll(){
-        List<Post> list = postService.findAll();
-        List<PostDTO> listDto = list.stream().map(obj -> new PostDTO(obj)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @RequestMapping(value = "/page", method = RequestMethod.GET)
     public ResponseEntity<Page<PostDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "postId") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction){
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Post> list = postService.findPage(page, linesPerPage, orderBy, direction);
         Page<PostDTO> listDto = list.map(obj -> new PostDTO(obj));
         return ResponseEntity.ok().body(listDto);
