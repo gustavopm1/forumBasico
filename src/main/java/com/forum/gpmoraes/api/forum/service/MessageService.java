@@ -43,8 +43,8 @@ public class MessageService {
     }
 
     public Message fromDTO(MessageDTO messageDTO){
-        return new Message(messageDTO.getId(),messageDTO.getDate(),messageDTO.getText(),messageDTO.getParentMessage(),
-                           messageDTO.getUser(),messageDTO.getPost());
+        return Message.builder().id(messageDTO.getId()).date(messageDTO.getDate()).text(messageDTO.getText()).parentMessage(messageDTO.getParentMessage())
+                .user(messageDTO.getUser()).post(messageDTO.getPost()).build();
     }
 
     private void updateData(Message newMessage, Message message) {

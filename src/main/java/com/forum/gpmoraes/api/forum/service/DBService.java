@@ -49,10 +49,10 @@ public class DBService {
             p2 = new Post(null,sdf.parse("29-09-2017@10:32"),"Testing second post",u2);
             p3 = new Post(null,sdf.parse("31-09-2017@10:55"),"Testing third post", u1);
 
-            m1 = new Message(null, sdf.parse("30-09-2017@10:15"),"Hello Test",null,u1,p1);
-            m2 = new Message(null, sdf.parse("30-09-2017@10:32") ,"How are you ?",m1, u1,p1);
+            m1 = Message.builder().date(sdf.parse("30-09-2017@10:15")).text("Hello Test").user(u1).post(p1).build();
+            m2 = Message.builder().date(sdf.parse("30-09-2017@10:32")).text("How are you ?").parentMessage(m1).user(u1).post(p1).build();
 
-            m3 = new Message(null,sdf.parse("31-09-2017@9:34"),"Hello",null,u2,p2);
+            m3 = Message.builder().date(sdf.parse("31-09-2017@9:34")).text("Hello").user(u2).post(p2).build();
 
         } catch (ParseException e) {
             e.printStackTrace();

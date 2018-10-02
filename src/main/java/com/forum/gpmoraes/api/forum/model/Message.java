@@ -23,37 +23,33 @@ public class Message implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
 
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern="dd-MM-yyyy@HH:mm")
-    private Date date;
+    Date date;
 
-    private String text;
+    String text;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parent_id")
-    private Message parentMessage;
+    Message parentMessage;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentMessage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
+    List<Message> messages = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private Post post;
+    Post post;
 
-    public Message(Integer id, Date date, String text, Message parentMessage, User user, Post post) {
-        this.id = id;
-        this.date = date;
-        this.text = text;
-        this.parentMessage = parentMessage;
-        this.user = user;
-        this.post = post;
-    }
+    @Column(name = "message_rating")
+    int rating;
+
+
 }
