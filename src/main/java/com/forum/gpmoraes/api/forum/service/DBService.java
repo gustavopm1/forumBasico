@@ -36,6 +36,7 @@ public class DBService {
 
         Post p1 = null;
         Post p2 = null;
+        Post p3 = null;
 
         Message m1 = null;
         Message m2 = null;
@@ -46,6 +47,7 @@ public class DBService {
 
             p1 = new Post(null, sdf.parse("27-09-2017@09:23"),"first",u1);
             p2 = new Post(null,sdf.parse("29-09-2017@10:32"),"Testing second post",u2);
+            p3 = new Post(null,sdf.parse("31-09-2017@10:55"),"Testing third post", u1);
 
             m1 = new Message(null, sdf.parse("30-09-2017@10:15"),"Hello Test",null,u1,p1);
             m2 = new Message(null, sdf.parse("30-09-2017@10:32") ,"How are you ?",m1, u1,p1);
@@ -57,7 +59,7 @@ public class DBService {
         }
 
 
-        u1.getPosts().addAll(Arrays.asList(p1));
+        u1.getPosts().addAll(Arrays.asList(p1,p3));
         u2.getPosts().addAll(Arrays.asList(p2));
         u1.getMessages().addAll(Arrays.asList(m1, m2));
         u2.getMessages().addAll(Arrays.asList(m3));
@@ -67,7 +69,7 @@ public class DBService {
 
         userRepository.saveAll(Arrays.asList(u1,u2));
 
-        postRepository.saveAll(Arrays.asList(p1, p2));
+        postRepository.saveAll(Arrays.asList(p1, p2, p3));
 
         messageRepository.saveAll(Arrays.asList(m1,m2,m3));
 

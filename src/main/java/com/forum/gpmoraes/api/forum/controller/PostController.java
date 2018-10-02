@@ -5,12 +5,15 @@ import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -61,7 +64,7 @@ public class PostController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "postId") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction){
         Page<Post> list = postService.findPage(page, linesPerPage, orderBy, direction);
         Page<PostDTO> listDto = list.map(obj -> new PostDTO(obj));
         return ResponseEntity.ok().body(listDto);
