@@ -7,9 +7,8 @@ import com.forum.gpmoraes.api.forum.repositories.MessageRepository;
 import com.forum.gpmoraes.api.forum.repositories.PostRepository;
 import com.forum.gpmoraes.api.forum.service.MessageService;
 import com.forum.gpmoraes.api.forum.service.PostService;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.MessageNotFoundException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -249,7 +248,7 @@ public class MessageTests {
         verify(messageRepository,times(1)).deleteById(1);
     }
 
-    @Test(expected = ObjectNotFoundException.class)
+    @Test(expected = MessageNotFoundException.class)
     public void testIsMessageDeletedAfterPostIsDeleted(){
         Optional<Message> messageFake = null;
 

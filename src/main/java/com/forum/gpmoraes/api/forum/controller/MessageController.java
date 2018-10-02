@@ -5,7 +5,6 @@ import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.MessageService;
 import com.forum.gpmoraes.api.forum.service.PostService;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +24,20 @@ public class MessageController {
     @Autowired
     PostService postService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Message> find(@PathVariable Integer postId, @PathVariable Integer id){
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Message> find(@PathVariable Integer postId, @PathVariable Integer id) {
 
         Post post = postService.find(postId);
-        Message message =  messageService.find(id);
+        Message message = messageService.find(id);
 
-        if(post.getMessages().contains(message))
+        if (post.getMessages().contains(message))
             return ResponseEntity.ok().body(message);
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 
-
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Void> insert(@Valid @RequestBody MessageDTO messageDTO, @PathVariable Integer postId) {
 
         Post post = postService.find(postId);
@@ -52,25 +50,28 @@ public class MessageController {
         return ResponseEntity.created(uri).build();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT )
-    public ResponseEntity<Void> update(@Valid @RequestBody MessageDTO messageDTO,@PathVariable Integer postId,  @PathVariable Integer id){
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> update(@Valid @RequestBody MessageDTO messageDTO, @PathVariable Integer postId, @PathVariable Integer id) {
+        try {
 
-        Post post = postService.find(postId);
+            Post post = postService.find(postId);
 
-        Message message = messageService.fromDTO(messageDTO);
+            Message message = messageService.fromDTO(messageDTO);
 
-        message.setId(id);
-        message = messageService.update(message);
-        return ResponseEntity.noContent().build();
+            messageService.update(message);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable Integer postId, @PathVariable Integer id){
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer postId, @PathVariable Integer id) {
 
         Post post = postService.find(postId);
-        Message message =  messageService.find(id);
+        Message message = messageService.find(id);
 
-        if(post.getMessages().contains(message)) {
+        if (post.getMessages().contains(message)) {
             messageService.delete(id);
             return ResponseEntity.noContent().build();
         } else {

@@ -5,7 +5,7 @@ import com.forum.gpmoraes.api.forum.dto.UserDTO;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.repositories.UserRepository;
 import com.forum.gpmoraes.api.forum.service.exceptions.DataIntegrityException;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class UserService {
 
     public User find (Integer id){
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new ObjectNotFoundException("User not found! Id: " + id + "."));
+        return user.orElseThrow(() -> new UserNotFoundException("User not found! Id: " + id + "."));
     }
 
     public User insert (User user){

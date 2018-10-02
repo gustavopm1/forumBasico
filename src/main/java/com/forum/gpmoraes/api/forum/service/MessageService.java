@@ -4,7 +4,7 @@ import com.forum.gpmoraes.api.forum.dto.MessageDTO;
 import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.repositories.MessageRepository;
 import com.forum.gpmoraes.api.forum.service.exceptions.DataIntegrityException;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.MessageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class MessageService {
 
     public Message find(Integer messageId){
         Optional<Message> message = messageRepository.findById(messageId);
-        return message.orElseThrow(() -> new ObjectNotFoundException("Message not found! Id: " + messageId + "."));
+        return message.orElseThrow(() -> new MessageNotFoundException("Message not found! Id: " + messageId + "."));
     }
 
     public Message insert (Message message){

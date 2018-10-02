@@ -22,13 +22,13 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{postId}")
     public ResponseEntity<Post> find(@PathVariable Integer postId) {
         Post post = postService.find(postId);
         return ResponseEntity.ok().body(post);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Void> insert(@Valid @RequestBody PostDTO postDTO) {
         Post post = postService.fromDTO(postDTO);
         post = postService.insert(post);
@@ -37,7 +37,7 @@ public class PostController {
         return ResponseEntity.created(uri).build();
     }
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.PUT)
+    @PutMapping(value = "/{postId}")
     public ResponseEntity<Void> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
         Post post = postService.fromDTO(postDTO);
         post.setPostId(id);
@@ -45,21 +45,13 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{postId}")
     public ResponseEntity<Void> delete(@PathVariable Integer postId) {
         postService.delete(postId);
         return ResponseEntity.noContent().build();
     }
 
-    /*
-        @RequestMapping(method = RequestMethod.GET)
-        public ResponseEntity<List<PostDTO>> findAll(){
-            List<Post> list = postService.findAll();
-            List<PostDTO> listDto = list.stream().map(obj -> new PostDTO(obj)).collect(Collectors.toList());
-            return ResponseEntity.ok().body(listDto);
-        }
-    */
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<Page<PostDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,

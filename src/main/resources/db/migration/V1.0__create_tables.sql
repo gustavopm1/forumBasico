@@ -10,7 +10,7 @@ create table user (
 
 create table post (
        post_id integer not null auto_increment,
-        date date,
+        date datetime,
         description varchar(255),
         user_id integer,
         primary key (post_id),
@@ -19,7 +19,7 @@ create table post (
 
 create table message (
        id integer not null auto_increment,
-        date date,
+        date datetime,
         text varchar(255),
         parent_id integer,
         post_id integer,

@@ -23,26 +23,17 @@ public class Post implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer postId;
+    Integer postId;
 
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern="dd-MM-yyyy@HH:mm")
-    private Date date;
-    private String description;
+    Date date;
+    String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
+    List<Message> messages = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
-
-
-    public  Post(Integer postId, Date date, String description, User user) {
-        this.postId = postId;
-        this.date = date;
-        this.description = description;
-        this.user = user;
-    }
-
+    User user;
 }

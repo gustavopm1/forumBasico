@@ -4,17 +4,13 @@ import com.forum.gpmoraes.api.forum.dto.PostDTO;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.repositories.PostRepository;
 import com.forum.gpmoraes.api.forum.service.exceptions.DataIntegrityException;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.PostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -23,7 +19,7 @@ public class PostService {
     private PostRepository postRepository;
 
     public Post find (Integer id){
-        return postRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Post not found! Id: " + id + "."));
+        return postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post not found! Id: " + id + "."));
     }
 
     public Post insert (Post post){
@@ -44,10 +40,6 @@ public class PostService {
         } catch (DataIntegrityViolationException e){
             throw new DataIntegrityException("Failed to delete!");
         }
-    }
-
-    public List<Post> findAll(){
-        return postRepository.findAll();
     }
 
     public Page<Post> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {

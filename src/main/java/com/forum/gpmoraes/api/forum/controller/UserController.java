@@ -18,13 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<User> find(@PathVariable Integer id){
            User user =  userService.find(id);
            return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Void> insert(@Valid @RequestBody UserDTO userDTO) {
         User user = userService.fromDTO(userDTO);
         user = userService.insert(user);
@@ -34,7 +34,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT )
+    @PutMapping(value = "/{id}")
     public ResponseEntity<Void> update(@Valid @RequestBody UserDTO userDTO, @PathVariable Integer id){
         User user = userService.fromDTO(userDTO);
         user.setId(id);
@@ -43,7 +43,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         userService.delete(id);
         return ResponseEntity.noContent().build();

@@ -4,7 +4,6 @@ import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.repositories.PostRepository;
 import com.forum.gpmoraes.api.forum.service.PostService;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
