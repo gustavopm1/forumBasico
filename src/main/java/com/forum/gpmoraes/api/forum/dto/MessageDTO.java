@@ -5,6 +5,7 @@ import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.model.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class MessageDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,11 +30,11 @@ public class MessageDTO implements Serializable {
 
     private String text;
 
-    private Message parentMessage;
+    private MessageDTO parentMessage;
 
-    private User user;
+    private UserDTO user;
 
-    private Post post;
+    private PostDTO post;
 
 
 }

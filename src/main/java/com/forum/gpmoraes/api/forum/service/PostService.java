@@ -47,15 +47,6 @@ public class PostService {
         return postRepository.findAll(pageRequest);
     }
 
-    public Post fromDTO(PostDTO postDTO){
-        return Post.builder()
-                .postId(postDTO.getId())
-                .date(postDTO.getDate())
-                .description(postDTO.getDescription())
-                .user(postDTO.getUser())
-                .build();
-    }
-
     private void updateData(Post newPost, Post post) {
         newPost.setDescription(post.getDescription());
     }

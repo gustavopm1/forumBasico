@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.model.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,20 +14,21 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class PostDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    Integer postId;
 
     @JsonFormat(pattern="dd-MM-yyyy@HH:mm")
-    private Date date;
-    private String description;
+    Date date;
+    String description;
 
-    private User user;
+    User user;
 
     public PostDTO(Post post){
-        id = post.getPostId();
+        postId = post.getPostId();
         date = post.getDate();
         description = post.getDescription();
         user = post.getUser();

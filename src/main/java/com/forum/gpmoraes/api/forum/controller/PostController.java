@@ -1,8 +1,10 @@
 package com.forum.gpmoraes.api.forum.controller;
 
 import com.forum.gpmoraes.api.forum.dto.PostDTO;
+import com.forum.gpmoraes.api.forum.mapping.PostMap;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.PostService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    private PostMap postMap = Mappers.getMapper(PostMap.class);
+
     @GetMapping(value = "/{postId}")
     public ResponseEntity<?> find(@PathVariable Integer postId) {
         try {
@@ -33,7 +37,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> insert(@Valid @RequestBody PostDTO postDTO) {
         try {
-            Post post = postService.fromDTO(postDTO);
+            Post post = postMap.convertFromDto(postDTO);
             post = postService.insert(post);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                     .path("/{postId}").buildAndExpand(post.getPostId()).toUri();
@@ -46,7 +50,7 @@ public class PostController {
     @PutMapping(value = "/{postId}")
     public ResponseEntity<?> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
         try {
-            Post post = postService.fromDTO(postDTO);
+            Post post = postMap.convertFromDto(postDTO);
             post.setPostId(id);
             post = postService.update(post);
             return ResponseEntity.noContent().build();
@@ -75,10 +79,8 @@ public class PostController {
             Page<Post> list = postService.findPage(page, linesPerPage, orderBy, direction);
             Page<PostDTO> listDto = list.map(obj -> new PostDTO(obj));
             return ResponseEntity.ok().body(listDto);
-        } catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-
 }

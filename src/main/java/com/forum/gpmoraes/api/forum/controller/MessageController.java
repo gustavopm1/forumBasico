@@ -1,10 +1,12 @@
 package com.forum.gpmoraes.api.forum.controller;
 
 import com.forum.gpmoraes.api.forum.dto.MessageDTO;
+import com.forum.gpmoraes.api.forum.mapping.MessageMap;
 import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.MessageService;
 import com.forum.gpmoraes.api.forum.service.PostService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ public class MessageController {
 
     @Autowired
     PostService postService;
+
+    private MessageMap messageMap = Mappers.getMapper(MessageMap.class);
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> find(@PathVariable Integer postId, @PathVariable Integer id) {
@@ -46,7 +50,7 @@ public class MessageController {
     try {
         Post post = postService.find(postId);
 
-        Message message = messageService.fromDTO(messageDTO);
+        Message message = messageMap.convertFromDto(messageDTO);
         message = messageService.insert(message);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -62,7 +66,7 @@ public class MessageController {
         try {
             Post post = postService.find(postId);
 
-            Message message = messageService.fromDTO(messageDTO);
+            Message message = messageMap.convertFromDto(messageDTO);
 
             messageService.update(message);
             return ResponseEntity.noContent().build();

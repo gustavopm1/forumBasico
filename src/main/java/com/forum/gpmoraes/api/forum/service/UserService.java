@@ -43,11 +43,6 @@ public class UserService {
         }
     }
 
-    public User fromDTO(UserDTO userDTO){
-        return new User(userDTO.getId(), userDTO.getName(),userDTO.getEmail(),userDTO.getUser(),
-                userDTO.getPassword(), userDTO.getBirthDate());
-    }
-
     private void updateData(User newUser, User user) {
         newUser.setName(user.getName());
         newUser.setEmail(user.getEmail());

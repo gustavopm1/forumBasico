@@ -1,8 +1,10 @@
 package com.forum.gpmoraes.api.forum.controller;
 
 import com.forum.gpmoraes.api.forum.dto.UserDTO;
+import com.forum.gpmoraes.api.forum.mapping.UserMap;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.service.UserService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private UserMap userMap = Mappers.getMapper(UserMap.class);
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> find(@PathVariable Integer id) {
         try {
@@ -32,7 +36,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> insert(@Valid @RequestBody UserDTO userDTO) {
         try {
-            User user = userService.fromDTO(userDTO);
+            User user = userMap.convertFromDto(userDTO);
             user = userService.insert(user);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                     .path("/{id}").buildAndExpand(user.getId()).toUri();
@@ -46,7 +50,7 @@ public class UserController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody UserDTO userDTO, @PathVariable Integer id) {
         try {
-            User user = userService.fromDTO(userDTO);
+            User user = userMap.convertFromDto(userDTO);
             user.setId(id);
             userService.update(user);
             return ResponseEntity.noContent().build();

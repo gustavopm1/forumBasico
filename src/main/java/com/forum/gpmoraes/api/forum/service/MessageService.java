@@ -42,11 +42,6 @@ public class MessageService {
         }
     }
 
-    public Message fromDTO(MessageDTO messageDTO){
-        return Message.builder().id(messageDTO.getId()).date(messageDTO.getDate()).text(messageDTO.getText()).parentMessage(messageDTO.getParentMessage())
-                .user(messageDTO.getUser()).post(messageDTO.getPost()).build();
-    }
-
     private void updateData(Message newMessage, Message message) {
         newMessage.setText(message.getText());
     }
