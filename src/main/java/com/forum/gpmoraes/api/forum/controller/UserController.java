@@ -4,6 +4,7 @@ import com.forum.gpmoraes.api.forum.dto.UserDTO;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,34 +20,52 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> find(@PathVariable Integer id){
-           User user =  userService.find(id);
-           return ResponseEntity.ok().body(user);
+    public ResponseEntity<?> find(@PathVariable Integer id) {
+        try {
+            User user = userService.find(id);
+            return ResponseEntity.ok().body(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@Valid @RequestBody UserDTO userDTO) {
-        User user = userService.fromDTO(userDTO);
-        user = userService.insert(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<?> insert(@Valid @RequestBody UserDTO userDTO) {
+        try {
+            User user = userService.fromDTO(userDTO);
+            user = userService.insert(user);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                    .path("/{id}").buildAndExpand(user.getId()).toUri();
+            return ResponseEntity.created(uri).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@Valid @RequestBody UserDTO userDTO, @PathVariable Integer id){
-        User user = userService.fromDTO(userDTO);
-        user.setId(id);
-        user = userService.update(user);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> update(@Valid @RequestBody UserDTO userDTO, @PathVariable Integer id) {
+        try {
+            User user = userService.fromDTO(userDTO);
+            user.setId(id);
+            userService.update(user);
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        try {
+            userService.delete(id);
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

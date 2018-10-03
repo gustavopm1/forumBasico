@@ -5,15 +5,13 @@ import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -23,43 +21,63 @@ public class PostController {
     private PostService postService;
 
     @GetMapping(value = "/{postId}")
-    public ResponseEntity<Post> find(@PathVariable Integer postId) {
-        Post post = postService.find(postId);
-        return ResponseEntity.ok().body(post);
+    public ResponseEntity<?> find(@PathVariable Integer postId) {
+        try {
+            Post post = postService.find(postId);
+            return ResponseEntity.ok().body(post);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@Valid @RequestBody PostDTO postDTO) {
-        Post post = postService.fromDTO(postDTO);
-        post = postService.insert(post);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{postId}").buildAndExpand(post.getPostId()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<?> insert(@Valid @RequestBody PostDTO postDTO) {
+        try {
+            Post post = postService.fromDTO(postDTO);
+            post = postService.insert(post);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                    .path("/{postId}").buildAndExpand(post.getPostId()).toUri();
+            return ResponseEntity.created(uri).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/{postId}")
-    public ResponseEntity<Void> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
-        Post post = postService.fromDTO(postDTO);
-        post.setPostId(id);
-        post = postService.update(post);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
+        try {
+            Post post = postService.fromDTO(postDTO);
+            post.setPostId(id);
+            post = postService.update(post);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @DeleteMapping(value = "/{postId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer postId) {
-        postService.delete(postId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable Integer postId) {
+        try {
+            postService.delete(postId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostDTO>> findPage(
+    public ResponseEntity<?> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "postId") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction){
-        Page<Post> list = postService.findPage(page, linesPerPage, orderBy, direction);
-        Page<PostDTO> listDto = list.map(obj -> new PostDTO(obj));
-        return ResponseEntity.ok().body(listDto);
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+        try {
+            Page<Post> list = postService.findPage(page, linesPerPage, orderBy, direction);
+            Page<PostDTO> listDto = list.map(obj -> new PostDTO(obj));
+            return ResponseEntity.ok().body(listDto);
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 

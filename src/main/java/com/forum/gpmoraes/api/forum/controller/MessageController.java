@@ -25,21 +25,25 @@ public class MessageController {
     PostService postService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Message> find(@PathVariable Integer postId, @PathVariable Integer id) {
+    public ResponseEntity<?> find(@PathVariable Integer postId, @PathVariable Integer id) {
 
-        Post post = postService.find(postId);
-        Message message = messageService.find(id);
+        try {
+            Post post = postService.find(postId);
+            Message message = messageService.find(id);
 
-        if (post.getMessages().contains(message))
-            return ResponseEntity.ok().body(message);
-        else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if (post.getMessages().contains(message))
+                return ResponseEntity.ok().body(message);
+            else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 
     @PostMapping
-    public ResponseEntity<Void> insert(@Valid @RequestBody MessageDTO messageDTO, @PathVariable Integer postId) {
-
+    public ResponseEntity<?> insert(@Valid @RequestBody MessageDTO messageDTO, @PathVariable Integer postId) {
+    try {
         Post post = postService.find(postId);
 
         Message message = messageService.fromDTO(messageDTO);
@@ -48,12 +52,14 @@ public class MessageController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}").buildAndExpand(message.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    } catch(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody MessageDTO messageDTO, @PathVariable Integer postId, @PathVariable Integer id) {
         try {
-
             Post post = postService.find(postId);
 
             Message message = messageService.fromDTO(messageDTO);
@@ -66,16 +72,19 @@ public class MessageController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer postId, @PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer postId, @PathVariable Integer id) {
+        try {
+            Post post = postService.find(postId);
+            Message message = messageService.find(id);
 
-        Post post = postService.find(postId);
-        Message message = messageService.find(id);
-
-        if (post.getMessages().contains(message)) {
-            messageService.delete(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if (post.getMessages().contains(message)) {
+                messageService.delete(id);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
