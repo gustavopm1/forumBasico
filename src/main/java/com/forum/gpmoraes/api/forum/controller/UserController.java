@@ -4,6 +4,7 @@ import com.forum.gpmoraes.api.forum.dto.UserDTO;
 import com.forum.gpmoraes.api.forum.mapping.UserMap;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -42,6 +44,7 @@ public class UserController {
                     .path("/{id}").buildAndExpand(user.getId()).toUri();
             return ResponseEntity.created(uri).build();
         } catch (Exception e) {
+            log.error("Erro ao salvar User!", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

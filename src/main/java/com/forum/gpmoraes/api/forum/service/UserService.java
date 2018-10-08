@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,7 @@ public class UserService {
 
     public User insert (User user){
         user.setId(null);
+        user.setBirthDate(new Date());
         return userRepository.save(user);
     }
 

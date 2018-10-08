@@ -1,4 +1,4 @@
-package com.forum.gpmoraes.api.forum;
+package com.forum.gpmoraes.api.forum.service;
 
 import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.model.Post;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MessageTests {
+public class MessageServiceTests {
 
     @Mock
     MessageRepository messageRepository;

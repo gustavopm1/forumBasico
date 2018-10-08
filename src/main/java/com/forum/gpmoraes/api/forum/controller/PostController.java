@@ -4,6 +4,7 @@ import com.forum.gpmoraes.api.forum.dto.PostDTO;
 import com.forum.gpmoraes.api.forum.mapping.PostMap;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.service.PostService;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
+@Slf4j
 @RequestMapping("/posts")
 public class PostController {
 
@@ -43,6 +45,7 @@ public class PostController {
                     .path("/{postId}").buildAndExpand(post.getPostId()).toUri();
             return ResponseEntity.created(uri).build();
         } catch (Exception e) {
+            log.error("Erro ao salvar Post!", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
