@@ -1,9 +1,11 @@
-package com.forum.gpmoraes.api.forum;
+package com.forum.gpmoraes.api.forum.service;
 
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.repositories.UserRepository;
 import com.forum.gpmoraes.api.forum.service.UserService;
+import com.forum.gpmoraes.api.forum.service.exceptions.UserNotFoundException;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,12 +18,13 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserTests {
+public class UserServiceTests {
 
     @Mock
     UserRepository userRepository;
@@ -150,5 +153,31 @@ public class UserTests {
 
         userService.delete(1);
         verify(userRepository,times(1)).deleteById(1);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testGETUserNotFound(){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+        Optional<User> userFake = null;
+
+        try {
+            userFake = Optional.of(User.builder()
+                    .id(1)
+                    .user("userFake")
+                    .password("passwordFake")
+                    .name("nameFake")
+                    .email("fake@fake.com")
+                    .birthDate(sdf.parse("22-05-1996"))
+                    .build());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+//        doReturn(userFake).when(userRepository).findById(eq(1));
+
+        User user = userService.find(2);
+
     }
 }

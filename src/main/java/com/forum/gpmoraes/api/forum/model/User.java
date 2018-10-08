@@ -49,12 +49,5 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-    public User(Integer id, String name, String email, String user, String password, Date birthDate) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.user = user;
-        this.password = password;
-        this.birthDate = birthDate;
-    }
+
 }

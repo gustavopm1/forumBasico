@@ -1,19 +1,15 @@
 package com.forum.gpmoraes.api.forum;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class ForumApplication implements CommandLineRunner {
+@EnableScheduling
+public class ForumApplication{
 
 	public static void main(String[] args) {
 	    SpringApplication.run(ForumApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-
-
 	}
-}

@@ -1,10 +1,10 @@
-package com.forum.gpmoraes.api.forum;
+package com.forum.gpmoraes.api.forum.service;
 
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.repositories.PostRepository;
 import com.forum.gpmoraes.api.forum.service.PostService;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.PostNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PostTests {
+public class PostServiceTests {
 
     @Mock
     private PostRepository postRepository;
@@ -187,6 +187,41 @@ public class PostTests {
 
         postService.delete(1);
         verify(postRepository,times(1)).deleteById(1);
+    }
+
+    @Test(expected = PostNotFoundException.class)
+    public void testGETPostByIDNotFound(){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy@HH:mm");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+
+        User userFake = null;
+
+        Optional<Post> postFake = null;
+
+        try {
+            userFake = User.builder()
+                    .id(1)
+                    .user("userFake")
+                    .password("passwordFake")
+                    .name("nameFake")
+                    .email("fake@fake.com")
+                    .birthDate(sdf2.parse("22-05-1996"))
+                    .build();
+
+            postFake = Optional.of(Post.builder()
+                    .postId(1)
+                    .user(userFake)
+                    .description("Testing")
+                    .date(sdf.parse("20-05-2017@12:55"))
+                    .build());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Post post = postService.find(3);
+
     }
 
 

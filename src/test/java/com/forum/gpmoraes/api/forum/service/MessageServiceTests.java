@@ -1,4 +1,4 @@
-package com.forum.gpmoraes.api.forum;
+package com.forum.gpmoraes.api.forum.service;
 
 import com.forum.gpmoraes.api.forum.model.Message;
 import com.forum.gpmoraes.api.forum.model.Post;
@@ -7,9 +7,8 @@ import com.forum.gpmoraes.api.forum.repositories.MessageRepository;
 import com.forum.gpmoraes.api.forum.repositories.PostRepository;
 import com.forum.gpmoraes.api.forum.service.MessageService;
 import com.forum.gpmoraes.api.forum.service.PostService;
-import com.forum.gpmoraes.api.forum.service.exceptions.ObjectNotFoundException;
+import com.forum.gpmoraes.api.forum.service.exceptions.MessageNotFoundException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MessageTests {
+public class MessageServiceTests {
 
     @Mock
     MessageRepository messageRepository;
@@ -249,7 +248,7 @@ public class MessageTests {
         verify(messageRepository,times(1)).deleteById(1);
     }
 
-    @Test(expected = ObjectNotFoundException.class)
+    @Test(expected = MessageNotFoundException.class)
     public void testIsMessageDeletedAfterPostIsDeleted(){
         Optional<Message> messageFake = null;
 
