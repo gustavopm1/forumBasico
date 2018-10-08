@@ -1,12 +1,15 @@
 package com.forum.gpmoraes.api.forum.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forum.gpmoraes.api.forum.dto.PostDTO;
 import com.forum.gpmoraes.api.forum.model.Post;
 import com.forum.gpmoraes.api.forum.model.User;
 import com.forum.gpmoraes.api.forum.service.PostService;
 import com.forum.gpmoraes.api.forum.service.UserService;
+import com.forum.gpmoraes.api.forum.service.exceptions.DataIntegrityException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -61,6 +64,11 @@ public class PostControllerTests {
         when(postService.insert(any(Post.class))).thenReturn(Post.builder().postId(1).user(userFake)
                 .description("Testing")
                 .build());
+
+        when(postService.update(any(Post.class))).thenReturn(Post.builder().postId(1).user(userFake)
+                .description("Testing")
+                .build());
+
     }
 
 
@@ -116,6 +124,64 @@ public class PostControllerTests {
                 .build();
 
         this.mockMvc.perform(delete("/posts/1")).andDo(print()).andExpect(status().isNoContent());
+    }
+
+
+    @Test
+    public void updateShouldUpdateUser() throws Exception {
+        User userFake = User.builder()
+                .id(1)
+                .user("userFake")
+                .password("passwordFake")
+                .name("nameFake")
+                .email("fake@fake.com")
+                .build();
+
+        PostDTO postFakeUpdated = PostDTO.builder()
+                .postId(1)
+                .user(userFake)
+                .description("Testing Update")
+                .build();
+
+        String json = new ObjectMapper().writeValueAsString(postFakeUpdated);
+
+        this.mockMvc.perform(put("/posts/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)).andDo(print())
+                .andExpect(status().isNoContent());
+
+
+    }
+
+    @Test
+    public void PostShouldInsertPost2() throws Exception {
+
+        User userFake = User.builder()
+                .id(1)
+                .user("userFake")
+                .password("passwordFake")
+                .name("nameFake")
+                .email("fake@fake.com")
+                .build();
+
+        Post postFake = postFake = Post.builder()
+                .postId(1)
+                .user(userFake)
+                .description("Testing")
+                .build();
+
+
+        String json = new ObjectMapper().writeValueAsString(postFake);
+
+        when(postService.insert(any(Post.class))).thenThrow(new DataIntegrityException("Teste"));
+
+        this.mockMvc.perform(post("/posts")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)).andDo(print())
+                .andExpect(status().is(500));
+
     }
 
 }

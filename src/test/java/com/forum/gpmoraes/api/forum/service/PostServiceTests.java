@@ -220,8 +220,6 @@ public class PostServiceTests {
             e.printStackTrace();
         }
 
-//        doReturn(postFake).when(postRepository).findById(eq(1));
-
         Post post = postService.find(3);
 
     }

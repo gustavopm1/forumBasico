@@ -51,7 +51,7 @@ public class PostController {
     }
 
     @PutMapping(value = "/{postId}")
-    public ResponseEntity<?> update(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer id) {
+    public ResponseEntity<?> update(@Valid @RequestBody PostDTO postDTO, @PathVariable(name = "postId") Integer id) {
         try {
             Post post = postMap.convertFromDto(postDTO);
             post.setPostId(id);

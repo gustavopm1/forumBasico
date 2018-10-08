@@ -83,7 +83,7 @@ public class MessageController {
 
             if (post.getMessages().contains(message)) {
                 messageService.delete(id);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

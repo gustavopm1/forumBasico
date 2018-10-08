@@ -42,10 +42,12 @@ public class UserControllerTests {
                 .name("nameFake")
                 .email("fake@fake.com").build());
 
-        when(userService.update(any(User.class))).thenReturn(User.builder().id(22).user("userFake")
+
+        when(userService.update(any(User.class))).thenReturn(User.builder().id(1).user("userFake")
                 .password("passwordFake")
                 .name("nameFake")
                 .email("fake@fake.com").build());
+
     }
 
     @Test
@@ -66,8 +68,6 @@ public class UserControllerTests {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        /*doReturn(userFake).when(userRepository).save(any(User.class));*/
 
         this.mockMvc.perform(get("/users/1")).andDo(print()).andExpect(status().isOk());
     }
@@ -121,36 +121,22 @@ public class UserControllerTests {
 
     @Test
     public void updateShouldUpdateUser() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-        Optional<User> userFake = null;
-
-        User userFakeUpdated = null;
-
-        try {
-            userFake = Optional.of(User.builder()
-                    .id(1)
-                    .user("userFake")
-                    .password("passwordFake")
-                    .name("nameFake")
-                    .email("fake@fake.com")
-                    .birthDate(sdf.parse("22-05-1996"))
-                    .build());
-
-            userFakeUpdated = User.builder()
+        UserDTO userFakeUpdated =  UserDTO.builder()
                     .id(1)
                     .user("userFakeUpdated")
                     .password("passwordFake")
                     .name("nameFake")
                     .email("fake@fake.com")
-                    .birthDate(sdf.parse("22-05-1996"))
                     .build();
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        String json = new ObjectMapper().writeValueAsString(userFakeUpdated);
 
-        this.mockMvc.perform(put("/users/1")).andDo(print()).andExpect(status().isCreated());
+        this.mockMvc.perform(put("/users/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)).andDo(print())
+                .andExpect(status().isNoContent());
     }
 
 
